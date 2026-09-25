@@ -3,6 +3,8 @@
 
 using System.Globalization;
 using LibreWinForms.Platform;
+using Silk.NET.Core.Loader;
+using Silk.NET.Windowing.Glfw;
 
 namespace LibreWinForms.ProGPU;
 
@@ -30,6 +32,14 @@ public static class ProGpuPlatform
         ArgumentNullException.ThrowIfNull(desktopCapture);
         ArgumentNullException.ThrowIfNull(nativeFonts);
         ArgumentNullException.ThrowIfNull(nativeGraphics);
+        if (OperatingSystem.IsFreeBSD())
+        {
+            // FreeBSD uses ELF sonames. Silk.NET 2.23's Linux loader path is
+            // compatible when the FreeBSD GLFW soname is staged beside WGPU.
+            SearchPathContainer.Platform = UnderlyingPlatform.Linux;
+            GlfwWindowing.Use();
+        }
+
         ProGpuDispatcher dispatcher = new();
         ManagedLibreHandleRegistry handles = new();
         ProGpuTimerService timers = new(dispatcher);
@@ -49,9 +59,11 @@ public static class ProGpuPlatform
                         new LibWaylandXdgForeignPortalParentExporter(),
                         ownsWayland: true)),
                 new ZenityLibreFileDialogService(dispatcher))
-            : OperatingSystem.IsMacOS()
-                ? new MacOsAppKitFileDialogService(dispatcher, handles)
-                : UnsupportedLibreFileDialogService.Instance;
+            : OperatingSystem.IsFreeBSD()
+                ? new ZenityLibreFileDialogService(dispatcher)
+                : OperatingSystem.IsMacOS()
+                    ? new MacOsAppKitFileDialogService(dispatcher, handles)
+                    : UnsupportedLibreFileDialogService.Instance;
         ProGpuDesktopCaptureService captureBridge = new(desktopCapture);
         ProGpuNativeDrawingInteropService nativeBridge;
         try

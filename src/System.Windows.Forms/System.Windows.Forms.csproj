@@ -41,6 +41,12 @@
     <ProjectReference Include="..\System.Windows.Forms.Primitives\src\System.Windows.Forms.Primitives.csproj" />
   </ItemGroup>
 
+  <ItemGroup Condition="'$(LibreFreeBsdBuild)' == 'true'">
+    <!-- Keep the portable build's internal drawing contracts directly visible
+         to canonical WinForms, including its HDC-free drawing event adapters. -->
+    <ProjectReference Include="..\System.Private.Windows.GdiPlus\System.Private.Windows.GdiPlus.csproj" />
+  </ItemGroup>
+
   <ItemGroup Condition="'$(LibreWinFormsUseProGpuSystemDrawing)' == 'true'">
     <ProjectReference Include="..\LibreWinForms.Platform\LibreWinForms.Platform.csproj" />
     <ProjectReference Include="$(LibreWinFormsProGpuSourceRoot)src\System.Drawing.Common\System.Drawing.Common.csproj" />

@@ -7,6 +7,25 @@
     <IncludePdbInPackage>false</IncludePdbInPackage>
     <PublishWindowsPdb>false</PublishWindowsPdb>
   </PropertyGroup>
+
+  <PropertyGroup Condition="'$(LibreFreeBsdBuild)' == 'true'">
+    <!-- FreeBSD's .NET 10 SDK does not publish the SDK ILAsm host tools. The
+         FreeBSD lane uses the Mono ilasm executable from the mono5.20 port. -->
+    <ILAsmToolPath Condition="'$(ILAsmToolPath)' == ''">$(MSBuildProjectDirectory)/../../../eng/freebsd-ilasm-tools</ILAsmToolPath>
+  </PropertyGroup>
+
+  <ItemGroup Condition="'$(LibreFreeBsdBuild)' == 'true'">
+    <Compile Remove="Accessibility.il" />
+    <Compile Include="$(IntermediateOutputPath)Accessibility.FreeBSD.il" />
+  </ItemGroup>
+
+  <Target Name="PreprocessFreeBsdAccessibilityIl"
+          BeforeTargets="CoreCompile"
+          Condition="'$(LibreFreeBsdBuild)' == 'true'">
+    <MakeDir Directories="$(IntermediateOutputPath)" />
+    <Exec Command="python3 &quot;$(MSBuildThisFileDirectory)..\..\..\eng\librewinforms-freebsd-il.py&quot; &quot;$(MSBuildProjectDirectory)/Accessibility.il&quot; &quot;$(IntermediateOutputPath)Accessibility.FreeBSD.il&quot;" />
+  </Target>
+
   <ItemGroup>
     <None Include="Accessibility.il" />
   </ItemGroup>

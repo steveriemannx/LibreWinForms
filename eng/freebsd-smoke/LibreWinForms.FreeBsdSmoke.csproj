@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <UseAppHost>false</UseAppHost>
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../../src/LibreWinForms.Platform/LibreWinForms.Platform.csproj" />
+    <ProjectReference Include="../../src/LibreWinForms.ProGPU/LibreWinForms.ProGPU.csproj" />
+    <ProjectReference Include="../../src/System.Windows.Forms/System.Windows.Forms.csproj" />
+    <ProjectReference Include="../../external/ProGPU/src/System.Drawing.Common/System.Drawing.Common.csproj" />
+    <ProjectReference Include="../../external/ProGPU/src/ProGPU.Text/ProGPU.Text.csproj" />
+    <PackageReference Include="OpenFontSharp" />
+    <PackageReference Include="StbImageSharp" />
+    <PackageReference Include="StbImageWriteSharp" />
+    <PackageReference Include="Silk.NET.Input" />
+    <PackageReference Include="Silk.NET.Input.Glfw" />
+    <PackageReference Include="Silk.NET.GLFW" />
+    <PackageReference Include="Silk.NET.WebGPU" />
+    <PackageReference Include="Silk.NET.Windowing" />
+    <PackageReference Include="Silk.NET.Windowing.Glfw" />
+    <PackageReference Include="Tmds.DBus.Protocol" />
+  </ItemGroup>
+</Project>

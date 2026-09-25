@@ -1,0 +1,35 @@
+#!/bin/sh
+
+# Mono ILAsm writes the expected public key/token but returns 1 because no
+# private signing key is available. Accept only that delay-signed result;
+# actual assembly syntax failures remain build errors.
+output=
+for argument in "$@"; do
+    case "$argument" in
+        -OUTPUT=*) output=${argument#-OUTPUT=} ;;
+    esac
+done
+
+if [ -n "$output" ]; then
+    rm -f "$output"
+fi
+
+/usr/local/bin/ilasm "$@"
+ilasm_status=$?
+if [ "$ilasm_status" -eq 0 ]; then
+    exit 0
+fi
+
+if [ -n "$output" ] && [ -s "$output" ]; then
+    verification=$(/usr/local/bin/sn -vf "$output" 2>&1 || true)
+    case "$verification" in
+        *"delay-signed but not strongnamed"*)
+            public_key=$(/usr/local/bin/sn -T "$output" 2>&1 || true)
+            case "$public_key" in
+                *"Public Key Token: 31bf3856ad364e35"*) exit 0 ;;
+            esac
+            ;;
+    esac
+fi
+
+exit "$ilasm_status"

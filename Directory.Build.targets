@@ -8,6 +8,12 @@
   <Import Project="$(RepositoryEngineeringDir)versioning.targets" />
   <Import Project="$(RepositoryEngineeringDir)Test.targets" Condition="'$(IsTestProject)' == 'true' "/>
 
+  <!-- FreeBSD source builds do not package Windows API documentation metadata. -->
+  <ItemGroup Condition="'$(LibreFreeBsdBuild)' == 'true'">
+    <PackageDownload Remove="Microsoft.Private.Intellisense" />
+    <PackageReference Remove="Microsoft.Private.Intellisense" />
+  </ItemGroup>
+
   <!-- CA1416 Validate platform compatibility. Do not apply to netstandard or .NET Framework as they do not have the attribute. -->
   <ItemGroup>
     <AssemblyAttribute Include="System.Runtime.Versioning.SupportedOSPlatform" Condition="'$(LibreWinFormsUseProGpuSystemDrawing)' != 'true' and !$(TargetFramework.StartsWith('netstandard')) and !$(TargetFramework.StartsWith('net4'))">

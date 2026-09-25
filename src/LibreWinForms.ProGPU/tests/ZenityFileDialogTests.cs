@@ -12,7 +12,7 @@ public class ZenityFileDialogTests
     [Fact]
     public void Show_UsesTokenizedLinuxDesktopArgumentsAndRepeatsAfterHelp()
     {
-        if (!OperatingSystem.IsLinux())
+        if (!OperatingSystem.IsLinux() && !OperatingSystem.IsFreeBSD())
         {
             return;
         }
@@ -52,7 +52,7 @@ public class ZenityFileDialogTests
     [Fact]
     public void Show_SaveAndFolderModesUseNativeChooserFlagsAndCancellationSnapshot()
     {
-        if (!OperatingSystem.IsLinux())
+        if (!OperatingSystem.IsLinux() && !OperatingSystem.IsFreeBSD())
         {
             return;
         }
@@ -93,7 +93,7 @@ public class ZenityFileDialogTests
     [Fact]
     public void Show_RejectsWrongDispatcherThreadBeforeStartingDesktopProcess()
     {
-        if (!OperatingSystem.IsLinux())
+        if (!OperatingSystem.IsLinux() && !OperatingSystem.IsFreeBSD())
         {
             return;
         }
@@ -128,7 +128,7 @@ public class ZenityFileDialogTests
     [Fact]
     public void Show_RejectsDesktopProcessFailureAndInvalidAcceptedSelection()
     {
-        if (!OperatingSystem.IsLinux())
+        if (!OperatingSystem.IsLinux() && !OperatingSystem.IsFreeBSD())
         {
             return;
         }

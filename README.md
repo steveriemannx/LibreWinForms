@@ -13,6 +13,40 @@ Current focus areas:
 
 The active development and default GitHub branch is `librewinforms-progpu-port`. Preview releases are produced from this branch by the LibreWinForms CI/release workflows and are tagged as `librewinforms-v<version>` after the matching ProGPU and LibreWPF bridge packages are available.
 
+### FreeBSD 15 x64
+
+The `freebsd` development branch targets the installed .NET 10 SDK and uses
+Silk.NET/GLFW for native windows. X11/XWayland sessions use GLFW's X11 backend;
+Wayland sessions use GLFW's Wayland backend. In a Wayland login, preserve
+`XDG_RUNTIME_DIR` and `WAYLAND_DISPLAY` and set `GLFW_PLATFORM=wayland`. FreeBSD
+file dialogs use the Zenity adapter; install the desktop tools used by the
+application separately.
+The canonical WinForms graph includes an IL-only `Accessibility.dll`; install
+Mono's IL assembler because the FreeBSD .NET SDK does not ship the ILAsm host
+packages used by other supported SDK hosts:
+
+```sh
+sudo pkg install mono5.20
+cd ~
+DOTNET_ROOT="$HOME/dotnet10" "$HOME/dotnet10/dotnet" build \
+  "$HOME/projects-main/LibreWinForms/src/System.Windows.Forms/System.Windows.Forms.csproj" \
+  -c Release -p:NetCurrent=net10.0 -p:LibreFreeBsdBuild=true \
+  -p:LibreWinFormsUseProGpuSystemDrawing=true \
+  -p:LibreWinFormsReferenceMode=Project \
+  -p:RestoreAdditionalProjectSources="$HOME/dotnet-nupkg"
+
+DOTNET_ROOT="$HOME/dotnet10" "$HOME/dotnet10/dotnet" run \
+  --project "$HOME/projects-main/LibreWinForms/eng/freebsd-smoke/LibreWinForms.FreeBsdSmoke.csproj" \
+  -c Release -p:NetCurrent=net10.0 -p:LibreFreeBsdBuild=true \
+  -p:LibreWinFormsUseProGpuSystemDrawing=true \
+  -p:LibreWinFormsReferenceMode=Project \
+  -p:RestoreAdditionalProjectSources="$HOME/dotnet-nupkg"
+```
+
+The `LibreFreeBsdBuild` property skips Windows API-doc package downloads. The
+Accessibility IL source remains canonical; the branch preprocesses its assembly
+references for Mono ILAsm in the FreeBSD build only.
+
 ## Getting Started: Switch From WinForms To LibreWinForms
 
 LibreWinForms is packaged as an MSBuild SDK so normal WinForms apps can move to the ProGPU/Silk.NET platform through the project file first. Keep application code, resources, existing package references, and normal `System.Windows.Forms` type usage unchanged unless the app uses Windows-only interop, raw HWND assumptions, native controls, designer-only APIs, or unsupported graphics APIs.

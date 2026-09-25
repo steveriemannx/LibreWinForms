@@ -60,8 +60,8 @@ public sealed class SystemLibreDesktopDialogProcessRunner : ILibreDesktopDialogP
 }
 
 /// <summary>
-/// Linux GTK file and folder selection through Zenity. Arguments are passed as discrete process
-/// tokens; logical LibreWinForms handles never cross into the native process.
+/// GTK file and folder selection through Zenity on Linux and FreeBSD. Arguments are passed as
+/// discrete process tokens; logical LibreWinForms handles never cross into the native process.
 /// </summary>
 public sealed partial class ZenityLibreFileDialogService : ILibreFileDialogService
 {
@@ -89,9 +89,9 @@ public sealed partial class ZenityLibreFileDialogService : ILibreFileDialogServi
             throw new InvalidOperationException("File dialogs must be shown on the owning dispatcher thread.");
         }
 
-        if (!OperatingSystem.IsLinux())
+        if (!OperatingSystem.IsLinux() && !OperatingSystem.IsFreeBSD())
         {
-            throw new PlatformNotSupportedException("The Zenity file-dialog adapter requires Linux.");
+            throw new PlatformNotSupportedException("The Zenity file-dialog adapter requires Linux or FreeBSD.");
         }
 
         LibreFileDialogRequestValidator.Validate(request);
