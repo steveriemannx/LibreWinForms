@@ -1,3 +1,4 @@
+# Disabled: upstream GitHub Actions are not used in this repository.
 name: Fix NuGet.config packageSource key in release/10.0 PRs
 
 on:

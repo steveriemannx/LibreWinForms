@@ -1,3 +1,4 @@
+# Disabled: upstream GitHub Actions are not used in this repository.
 name: LibreWinForms Release
 
 on:

@@ -1,3 +1,4 @@
+# Disabled: upstream GitHub Actions are not used in this repository.
 name: Locker - Lock stale issues and PRs
 on:
   schedule:
